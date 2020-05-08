@@ -3,6 +3,20 @@ use crate::statistics::*;
 use std::borrow::Borrow;
 use std::f64;
 
+impl <T, Elmt> Min<Elmt> for T
+where 
+    for<'a> &'a T: IntoIterator<Item=Elmt>, 
+    Elmt: Ord 
+{
+   fn min(&self) -> Elmt {
+        let mut iter = self.into_iter();
+        match iter.next() {
+            None => panic!("Empty List"),
+            Some(x) => iter.fold(x, |acc, y| acc.min(y))
+        }
+   } 
+}
+
 impl<T> Statistics<f64> for T
 where
     T: IntoIterator,
